@@ -14,7 +14,7 @@ import (
 	"github.com/goml/gobrain"
 )
 
-const currentFileCount = 4
+const currentFileCount = 17
 
 func buildTrainingSet() {
 
@@ -46,8 +46,6 @@ func buildTrainingSet() {
 				grayColor := (color.Gray{uint8(255)})
 				if perfectRand := r1.Intn(10); perfectRand != 1 {
 					grayColor = (color.Gray{uint8(math.Ceil(avg))})
-				} else {
-					grayColor = (color.Gray{uint8(255)})
 				}
 				gray.Set(x, y, grayColor)
 			}
@@ -93,31 +91,114 @@ func get1DArrayImage(imagePath string) []float64 {
 	}
 	return output
 }
+func saveImageFrom1DArray(img []float64) {
+	gray := image.NewGray(image.Rectangle{image.Point{0, 0}, image.Point{100, 100}})
+	indexCount := 0
+	for x := 0; x < 100; x++ {
+		for y := 0; y < 100; y++ {
+			grayColor := (color.Gray{uint8(math.Ceil(img[indexCount] * 255))})
+			gray.Set(x, y, grayColor)
+			indexCount++
+		}
+	}
+
+	outfilename := "./answer/test.png"
+	outfile, err := os.Create(outfilename)
+	if err != nil {
+		// replace this with real error handling
+		panic(err.Error())
+	}
+	defer outfile.Close()
+	png.Encode(outfile, gray)
+}
 func main() {
 	/* create some random noise from ./input directory to ./output directory */
-	buildTrainingSet()
+	// buildTrainingSet()
+
 	inputImage0 := get1DArrayImage("./output/0.png")
-	fmt.Println("load 0.png done")
+	outputImage0 := get1DArrayImage("./input/0.png")
+
 	inputImage1 := get1DArrayImage("./output/1.png")
-	fmt.Println("load 1.png done")
+	outputImage1 := get1DArrayImage("./input/1.png")
+
 	inputImage2 := get1DArrayImage("./output/2.png")
-	fmt.Println("load 2.png done")
+	outputImage2 := get1DArrayImage("./input/2.png")
+
 	inputImage3 := get1DArrayImage("./output/3.png")
-	fmt.Println("load 3.png done")
-	fmt.Printf("%+v\n", inputImage0)
+	outputImage3 := get1DArrayImage("./input/3.png")
+
+	inputImage4 := get1DArrayImage("./output/4.png")
+	outputImage4 := get1DArrayImage("./input/4.png")
+
+	inputImage5 := get1DArrayImage("./output/5.png")
+	outputImage5 := get1DArrayImage("./input/5.png")
+
+	inputImage6 := get1DArrayImage("./output/6.png")
+	outputImage6 := get1DArrayImage("./input/6.png")
+
+	inputImage7 := get1DArrayImage("./output/7.png")
+	outputImage7 := get1DArrayImage("./input/7.png")
+
+	inputImage8 := get1DArrayImage("./output/8.png")
+	outputImage8 := get1DArrayImage("./input/8.png")
+
+	inputImage9 := get1DArrayImage("./output/9.png")
+	outputImage9 := get1DArrayImage("./input/9.png")
+
+	inputImage10 := get1DArrayImage("./output/10.png")
+	outputImage10 := get1DArrayImage("./input/10.png")
+
+	inputImage11 := get1DArrayImage("./output/11.png")
+	outputImage11 := get1DArrayImage("./input/11.png")
+
+	inputImage12 := get1DArrayImage("./output/12.png")
+	outputImage12 := get1DArrayImage("./input/12.png")
+
+	inputImage13 := get1DArrayImage("./output/13.png")
+	outputImage13 := get1DArrayImage("./input/13.png")
+
+	inputImage14 := get1DArrayImage("./output/14.png")
+	outputImage14 := get1DArrayImage("./input/14.png")
+
+	inputImage15 := get1DArrayImage("./output/15.png")
+	outputImage15 := get1DArrayImage("./input/15.png")
+
+	inputImage16 := get1DArrayImage("./output/16.png")
+	outputImage16 := get1DArrayImage("./input/16.png")
+	fmt.Println("load training set done")
 	patterns := [][][]float64{
-		{inputImage0, {0, 0, 0, 0, 0, 0, 0}},
-		{inputImage1, {0, 1, 1, 0, 0, 0, 0}},
-		{inputImage2, {1, 1, 0, 1, 1, 0, 1}},
-		{inputImage3, {1, 1, 1, 1, 0, 0, 1}},
+		{inputImage0, outputImage0},
+		{inputImage1, outputImage1},
+		{inputImage2, outputImage2},
+		{inputImage3, outputImage3},
+		{inputImage4, outputImage4},
+		{inputImage5, outputImage5},
+		{inputImage6, outputImage6},
+		{inputImage7, outputImage7},
+		{inputImage8, outputImage8},
+		{inputImage9, outputImage9},
+		{inputImage10, outputImage10},
+		{inputImage11, outputImage11},
+		{inputImage12, outputImage12},
+		{inputImage13, outputImage13},
+		{inputImage14, outputImage14},
+		{inputImage15, outputImage15},
+		{inputImage16, outputImage16},
 	}
 
 	// // Training Phase
+	start := time.Now()
 	ff := &gobrain.FeedForward{}
-	ff.Init(10000, 10000, 10000)
-	ff.Train(patterns, 1000, 0.6, 0.4, false)
+	ff.Init(10000, 40, 10000)
+	ff.Train(patterns, 1000, 0.4, 0.2, false)
+	elapsed := time.Since(start)
+	fmt.Printf("training time : %+v\n", elapsed)
 
 	// Testing Phase
-	// inputs := []float64{1}
-	// answer := ff.Update(inputs)
+	inputs := inputImage0
+	answer := ff.Update(inputs)
+
+	saveImageFrom1DArray(answer)
+	fmt.Println("image saved")
+
 }
