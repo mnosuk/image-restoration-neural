@@ -81,7 +81,6 @@ func main() {
 		{{9}, {1, 1, 1, 1, 0, 1, 1}},
 	}
 
-	// // Let This Blackbox learn for a thousand round
 	// // Training Phase
 	ff := &gobrain.FeedForward{}
 	ff.Init(1, 4, 7)
